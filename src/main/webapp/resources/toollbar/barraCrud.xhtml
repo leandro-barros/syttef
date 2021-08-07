@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+      xmlns:p="http://primefaces.org/ui">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute name="managedBean" required="true"></cc:attribute>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <p:toolbar>
+            <p:toolbarGroup>
+                 <p:commandButton icon="fa fa-file-o" value="Novo" action="#{cc.attrs.managedBean.novo()}" update="@form"></p:commandButton>
+                    <p:commandButton icon="fa fa-save" value="Salvar" action="#{cc.attrs.managedBean.salvar()}" disabled="#{cc.attrs.managedBean.busca==true}" update="@form"> </p:commandButton>
+                    <p:commandButton  value="#{cc.attrs.managedBean.busca?'Buscar':'Voltar'}"  icon="fa #{cc.attrs.managedBean.busca?'fa-search':'fa-undo'}" action="#{cc.attrs.managedBean.buscar()}" update="@form"></p:commandButton>
+                
+            </p:toolbarGroup>
+            <cc:insertChildren></cc:insertChildren>
+        </p:toolbar>
+    </cc:implementation>
+</html>

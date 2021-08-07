@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/templates/Layout.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"            
+                xmlns:toollbar="http://xmlns.jcp.org/jsf/composite/toollbar">
+
+    <ui:define name="content">
+        <h:form>
+            #{loginBean.redirecionaSemPermissao('Admin')}
+            <div id="cabecalho">
+                <h1>Alimento</h1>
+            </div>            
+
+            <p:spacer></p:spacer>
+
+            <p:messages  autoUpdate="true" >
+                <p:effect  event="load" type="bounce" speed="600"></p:effect>
+            </p:messages>
+            <toollbar:barraCrud managedBean="#{alimentoBean}">
+                <p:toolbarGroup align="right">
+                    <p:button  icon="fa fa-cutlery" value="Voltar" outcome="alimentacao.jsf" ></p:button>
+                </p:toolbarGroup>
+            </toollbar:barraCrud>
+            <p:spacer></p:spacer>
+            <p:fieldset legend="Cadastro de Alimentos" rendered="#{!alimentoBean.busca}">
+
+                <h:panelGrid columns="2" >
+                    <h:outputLabel value="Nome Alimento"></h:outputLabel> 
+                    <p:inputText value="#{alimentoBean.entidade.alimento}"></p:inputText>
+                </h:panelGrid>
+
+            </p:fieldset>
+            <p:panel rendered="#{alimentoBean.busca==true}" collapsed="true" header="Busca Personalizada" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="500" widgetVar="panel" style="margin-bottom:20px">                
+                <h:panelGrid columns="2" >
+                    <h:outputLabel value="Nome Alimento"></h:outputLabel> 
+                    <p:inputText value="#{alimentoBean.entidade.alimento}">
+                        <p:ajax event="keyup" delay="800" global="false" listener="#{alimentoBean.buscar()}" update="dataTableAlimento"></p:ajax>
+                    </p:inputText>
+                </h:panelGrid>      
+            </p:panel>
+
+            <p:tooltip for="@(.desabilitado)"></p:tooltip>
+            <p:dataTable id="dataTableAlimento" value="#{alimentoBean.entidades}" reflow="true" var="f" rowKey="#{f}" rendered="#{alimentoBean.busca==true}" emptyMessage="Clique no Botão Buscar. Para Listar Registros!" paginator="true" rows="10" rowsPerPageTemplate="5, 10, 20, 30">
+
+                <p:column headerText="Botões">
+                    <p:commandButton icon="ui-icon-pencil" action="#{alimentoBean.editar(f)}" update="@form"></p:commandButton>
+                    <p:commandButton id="alimento#{f.id}" icon="fa fa-trash-o" disabled="#{!f.podeDeletar()}" action="#{alimentoBean.deletar(f)}" update="@form">
+                        <p:confirm header="Confirmação" message="Deseja Realmente Excluir ?" icon="ui-icon-alert"></p:confirm>
+                    </p:commandButton>
+                    <h:outputText rendered="#{!f.podeDeletar()}" title="Não pode deletar alimento pois está associada a outros registro do sistema."  styleClass="fa fa-question desabilitado"></h:outputText>
+                </p:column>
+                <p:column headerText="Nome Alimento">
+                    <h:outputText value="#{f.alimento}"></h:outputText>
+                </p:column>
+            </p:dataTable>    
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+

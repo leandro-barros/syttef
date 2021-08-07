@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/templates/Layout.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"            
+                xmlns:toollbar="http://xmlns.jcp.org/jsf/composite/toollbar">
+
+    <ui:define name="content">
+        <!--<ui:param name="titulo" value="Alimentação"></ui:param>-->
+        <h:form>
+            #{loginBean.redirecionaSemPermissao('Admin')}
+            <div id="cabecalho">
+                <h1>Controle de Alimentação</h1>
+            </div>            
+
+            <p:spacer></p:spacer>
+            <p:messages autoUpdate="true" >
+                <p:effect event="load" type="bounce" speed="600"></p:effect>
+            </p:messages>
+
+            <toollbar:barraCrud managedBean="#{alimentacaoBean}"></toollbar:barraCrud>
+            <p:spacer></p:spacer>
+            <p:fieldset legend="Cadastro Controle de Alimentação" rendered="#{!alimentacaoBean.busca}">
+
+                <h:panelGrid columns="2" >
+                    <h:outputLabel value="Nome Animal"></h:outputLabel>
+                    <p:selectOneMenu value="#{alimentacaoBean.entidade.animal}" filter="true" converter="#{alimentacaoBean.animalConverter}">
+                        <f:selectItem itemLabel="Selecione"></f:selectItem>
+                        <f:selectItems value="#{alimentacaoBean.listaAnimal}" var="bov" itemLabel="#{bov.animal}" itemValue="#{bov}"></f:selectItems>
+                    </p:selectOneMenu>
+                    </h:panelGrid>
+                    <h:panelGrid columns="3">
+                        <h:outputLabel value="Nome Alimento"></h:outputLabel>
+                        <p:selectOneMenu value="#{alimentacaoBean.entidade.alimento}" filter="true" converter="#{alimentacaoBean.alimentoConverter}">
+                            <f:selectItem itemLabel="Selecione"></f:selectItem>
+                            <f:selectItems value="#{alimentacaoBean.listaAlimento}" var="bov" itemLabel="#{bov.alimento}" itemValue="#{bov}"></f:selectItems>
+                        </p:selectOneMenu>
+                        <p:commandButton icon="fa fa-leaf" value=" Novo Alimento" process="@form" oncomplete="window.open('alimento.jsf','_self')" ></p:commandButton>
+                    </h:panelGrid>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="Data"></h:outputLabel> 
+                    <p:calendar value="#{alimentacaoBean.entidade.dataAlimentacao}" locale="de" navigator="true"  pattern="dd/MM/yyyy HH:mm"></p:calendar>
+
+                    <h:outputLabel value="Quantidade"></h:outputLabel> 
+                    <p:spinner prefix="Kg " stepFactor="0.5" min="0" value="#{alimentacaoBean.entidade.quantidade}"></p:spinner>
+
+                    <h:outputLabel value="Observação"></h:outputLabel>
+                    <p:inputTextarea placeholder="Escreva um Comentário"  rows="3" cols="26" autoResize="false" value="#{alimentacaoBean.entidade.observacao}"></p:inputTextarea>
+                </h:panelGrid>
+            </p:fieldset>
+
+            <p:panel rendered="#{alimentacaoBean.busca==true}" collapsed="true" header="Busca Personalizada" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="500" widgetVar="panel" style="margin-bottom:20px">                
+                <h:panelGrid columns="2" >
+                    <h:outputLabel value="Nome Animal"></h:outputLabel> 
+                    <p:inputText value="#{alimentacaoBean.nomeVaca}">
+                        <p:ajax event="keyup" delay="800" global="false" listener="#{alimentacaoBean.buscar()}" update="dataTableAlimentacao"></p:ajax>
+                    </p:inputText>
+                    <h:outputLabel value="Data Alimentação"></h:outputLabel> 
+                    <p:calendar pattern="dd/MM/yyyy" mask="true" value ="#{alimentacaoBean.dataAlimentacao}">
+                        <p:ajax event="dateSelect" global="false" listener="#{alimentacaoBean.buscar()}" update="dataTableAlimentacao"></p:ajax>
+                        <p:ajax event="keyup" delay="1200" global="false" listener="#{alimentacaoBean.buscar()}" update="dataTableAlimentacao"></p:ajax>
+                    </p:calendar>
+                </h:panelGrid>      
+            </p:panel>
+
+
+            <p:dataTable id="dataTableAlimentacao" value="#{alimentacaoBean.entidades}" reflow="true" var="f" rowKey="#{f}" rendered="#{alimentacaoBean.busca==true}" emptyMessage="Clique no Botão Buscar. Para Listar Registros!" paginator="true" rows="10" rowsPerPageTemplate="5, 10, 20, 30">
+
+                <p:column headerText="Botões">
+                    <p:commandButton icon="ui-icon-pencil" action="#{alimentacaoBean.editar(f)}" update="@form"></p:commandButton>
+                    <p:commandButton icon="fa fa-trash-o" action="#{alimentacaoBean.deletar(f)}"  update="@form">
+                        <p:confirm header="Confirmação" message="Deseja Realmente Excluir ?" icon="ui-icon-alert"></p:confirm>
+                    </p:commandButton>
+                </p:column>
+                <p:column headerText="Nome">
+                    <h:outputText value="#{f.animal.animal}"></h:outputText>
+                </p:column>
+                <p:column headerText="Nome Alimento">
+                    <h:outputText value="#{f.alimento.alimento}"></h:outputText>
+                </p:column>
+                <p:column headerText="Data">
+                    <h:outputText value="#{f.dataAlimentacao}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Quantidade">
+                    <h:outputText value="#{f.quantidade}"></h:outputText>
+                </p:column>
+            </p:dataTable>    
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+

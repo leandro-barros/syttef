@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/templates/Layout.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"            
+                xmlns:toollbar="http://xmlns.jcp.org/jsf/composite/toollbar">
+
+    <ui:define name="content">
+        <h:form>
+            <div id="cabecalho">
+                <h1>Veiculo</h1>
+            </div>            
+
+            <p:spacer></p:spacer>
+
+            <p:messages autoUpdate="true">
+                <p:effect event="load" type="bounce" speed="600"></p:effect>
+            </p:messages>
+            <toollbar:barraCrud managedBean="#{veiculoBean}"></toollbar:barraCrud>
+            <p:spacer></p:spacer>
+            
+            <p:fieldset legend="Cadastro do Veiculo" rendered="#{!veiculoBean.busca}">
+                <h:panelGrid columns="2" >
+                    <h:outputLabel value="Motorista"></h:outputLabel>
+                    <p:selectOneMenu value="#{veiculoBean.entidade.pessoa}" filter="true" converter="#{veiculoBean.pessoaConverter}">
+                        <f:selectItem itemLabel="Selecione"></f:selectItem>
+                        <f:selectItems value="#{veiculoBean.listaPessoa}" var="p" itemLabel="#{p.nome}" itemValue="#{p}"></f:selectItems>
+                    </p:selectOneMenu>
+
+                    <h:outputLabel value="Modelo"></h:outputLabel> 
+                    <p:inputText value="#{veiculoBean.entidade.modelo}"></p:inputText>
+
+                    <h:outputLabel value="Placa"></h:outputLabel>
+                    <p:inputMask mask="aaa-9999" value="#{veiculoBean.entidade.placa}"></p:inputMask>     
+
+                    <h:outputLabel value="Data"></h:outputLabel> 
+                    <p:calendar value="#{veiculoBean.entidade.dataBusca}" pattern="dd/MM/yyyy HH:mm"></p:calendar>
+
+                    <h:outputLabel value="Litros Levado"></h:outputLabel>
+                    <p:spinner min="0" prefix="Lt " stepFactor="0.25" value="#{veiculoBean.entidade.quantidade}"></p:spinner>     
+
+                    <h:outputLabel value="Observação"></h:outputLabel>
+                    <p:inputTextarea placeholder="Escreva um Comentário" rows="3" cols="26" autoResize="false" value="#{veiculoBean.entidade.observacao}"></p:inputTextarea> 
+                </h:panelGrid>
+                
+            </p:fieldset>
+            
+                <p:panel rendered="#{veiculoBean.busca==true}" collapsed="true" header="Busca Personalizada" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="500" widgetVar="panel" style="margin-bottom:20px">                
+                    <h:panelGrid columns="2" >
+                        <h:outputLabel value="Nome Motorista"></h:outputLabel> 
+                        <p:inputText value="#{veiculoBean.nomeMotorista}">
+                            <p:ajax event="keyup" delay="800" global="false" listener="#{veiculoBean.buscar()}" update="dataTableVeiculo"></p:ajax>
+                        </p:inputText>
+                        <h:outputLabel value="Data da Busca"></h:outputLabel> 
+                        <p:calendar value ="#{veiculoBean.dataBusca}">
+                            <p:ajax event="dateSelect" global="false" listener="#{veiculoBean.buscar()}" update="dataTableVeiculo"></p:ajax>
+                            <p:ajax event="keyup" delay="1200" global="false" listener="#{veiculoBean.buscar()}" update="dataTableVeiculo"></p:ajax>
+                        </p:calendar>
+                    </h:panelGrid>      
+                </p:panel>
+
+                <p:dataTable id="dataTableVeiculo" value="#{veiculoBean.entidades}" reflow="true" var="f" rowKey="#{f}" rendered="#{veiculoBean.busca==true}" emptyMessage="Clique no Botão Buscar. Para Listar Registros!" paginator="true" rows="10" rowsPerPageTemplate="5, 10, 20, 30">
+                    <p:column headerText="Botões">
+                        <p:commandButton icon="ui-icon-pencil" action="#{veiculoBean.editar(f)}" update="@form"></p:commandButton>
+                        <p:commandButton icon="fa fa-trash-o" action="#{veiculoBean.deletar(f)}" update="@form"><p:confirm header="Confirmação" message="Deseja Realmente Excluir ?" icon="ui-icon-alert"></p:confirm></p:commandButton>
+                    </p:column>
+                    <p:column headerText="Motorista">
+                        <h:outputText value="#{f.pessoa.nome}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="modelo">
+                        <h:outputText value="#{f.modelo}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="Placa">
+                        <h:outputText value="#{f.placa}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="Data">
+                        <h:outputText value="#{f.dataBusca}">
+                            <f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Q.Leite">
+                        <h:outputText value="#{f.quantidade}"></h:outputText>
+                    </p:column>
+                </p:dataTable>    
+        </h:form>
+    </ui:define>
+</ui:composition>
+

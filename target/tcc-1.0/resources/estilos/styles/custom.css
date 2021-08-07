@@ -1,0 +1,38 @@
+/* BASE */
+body {
+    margin: 0;
+    font-size: 13px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.ui-growl-info, .ui-messages .ui-messages-info, .ui-message.ui-message-info {
+    /*    color: #fff;
+        background-color: #9ccc65;
+        border-color: #9ccc65;*/
+}
+/* TABVIEW */
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected a {
+    color: #555;
+}
+
+@media (max-width: 640px) {
+    .ui-tabs.ui-tabs-top > .ui-tabs-nav li {
+        width: 100%;
+    }
+}
+
+/* PANELGRID */
+.ui-panelgrid.panelgrid-noborder .ui-grid-responsive {
+    border: none;
+}
+
+@media (max-width: 640px) {
+    .ui-panelgrid.panelgrid-noborder .ui-grid-responsive .ui-grid-row {
+        border: none;
+      
+    }
+    .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header.ui-state-default {
+        font-weight: normal!important; 
+
+    }
+
+}

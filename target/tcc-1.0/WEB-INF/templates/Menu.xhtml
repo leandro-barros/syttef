@@ -1,0 +1,77 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <script type="text/javascript">
+
+        function menu() {
+
+            $('#home').click(function () {
+                $(this).addClass('.menuSelecionado');
+            });
+        }
+        jQuery().ready(function login() {
+            $('#login').click(function () {
+                if ($('#login.mostrar-usuario').length === 1) {
+                    $('#login.mostrar-usuario').removeClass('mostrar-usuario');
+                    $('#iconmenuuser').addClass('fa-angle-double-right');
+                    $('#iconmenuuser').removeClass('fa-angle-double-down');
+
+                } else {
+                    $('#login').not('mostrar-usuario').addClass('mostrar-usuario');
+                    $('#iconmenuuser').removeClass('fa-angle-double-right');
+                    $('#iconmenuuser').addClass('fa-angle-double-down');
+                    return false;
+                }
+            });
+        });
+
+    </script>
+    <h:form>
+        <nav class="aw-menu">
+
+            <ul>
+                <li id="login" class="usuarioLogado">
+                    <div style="text-align: center; padding: 10px 0px 10px 0px">
+                        <div><a class="#{facesContext.viewRoot.viewId == 'login'?'':''}" href="#" ><i class="fa fa-user size"></i><strong> Bem Vindo #{loginBean.usuarioLogado.login}</strong><span class="fa fa-angle-double-right" id="iconmenuuser"></span></a></div>
+                        <h:link outcome="logout.jsf">
+                            <i class="fa fa-key size"></i>Sair
+                        </h:link>
+                    </div>
+                </li>
+              
+                <li class="#{facesContext.viewRoot.viewId == '/index.xhtml'?'is-selected':''}">
+                    <h:link outcome="index.jsf" ><i class="fa fa-home size"></i>Página Inicial</h:link>
+                </li>
+                <li class="#{facesContext.viewRoot.viewId == '/pessoa.xhtml'?'is-selected':''}">
+                    <h:link outcome="pessoa.jsf" ><i class="fa fa-user-plus size"></i>Pessoa</h:link>
+                </li>
+                <li class="#{facesContext.viewRoot.viewId == '/usuario.xhtml'?'is-selected':''}">
+                    <h:link outcome="usuario.jsf" rendered="#{loginBean.possuiPermissao('Admin')}"><i class="fa fa-user size"></i>Usuário</h:link>
+                </li>
+                <li class="#{facesContext.viewRoot.viewId == '/controleLeiteiro.xhtml'?'is-selected':''}">
+                    <h:link outcome="controleLeiteiro.jsf" ><i class="fa fa-beer size"></i>Entrega Leite</h:link>
+                </li>
+                <li class="#{facesContext.viewRoot.viewId == '/veiculo.xhtml'?'is-selected':''}">
+                    <h:link outcome="veiculo.jsf" ><i class="fa fa-truck size"></i>Veículo</h:link>
+                </li>
+                <li class="#{facesContext.viewRoot.viewId == '/animal.xhtml'?'is-selected':''}">
+                    <h:link outcome="animal.jsf" rendered="#{loginBean.possuiPermissao('Admin')}"><i class="fa fa-paw size"></i>Animal</h:link>
+                </li>
+                <li class="#{facesContext.viewRoot.viewId == '/alimentacao.xhtml'?'is-selected':''}">
+                    <h:link outcome="alimentacao.jsf" rendered="#{loginBean.possuiPermissao('Admin')}"><i class="fa fa-cutlery size"></i>Alimentação</h:link>
+                </li>
+                <li class="#{facesContext.viewRoot.viewId == '/producaoLeite.xhtml'?'is-selected':''}">
+                    <h:link outcome="producaoLeite.jsf" rendered="#{loginBean.possuiPermissao('Admin')}"><i class="fa fa-pinterest-p size"></i>Produção de Leite</h:link>
+                </li>
+                <li class="#{facesContext.viewRoot.viewId == '/relatorio.xhtml'?'is-selected':''}">
+                    <h:link outcome="relatorio.jsf" rendered="#{loginBean.possuiPermissao('Admin')}" ><i class="fa fa-arrow-down size"></i>Relatórios</h:link>
+                </li>
+                <li class="#{facesContext.viewRoot.viewId == '/configuracao.xhtml'?'is-selected':''}">
+                    <h:link outcome="configuracao.jsf" rendered="#{loginBean.possuiPermissao('Admin')}"><i class="fa fa-gear size"></i>Configuração</h:link>
+                </li>
+            </ul>
+        </nav>
+    </h:form>
+</ui:composition>

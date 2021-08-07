@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/sittef</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password">root</property>
+    
+    
+        <!--<property name="hibernate.hbm2ddl.auto">create</property>-->
+        <!--<property name="hibernate.hbm2ddl.auto">update</property>-->
+    
+        <property name="hibernate.format_sql">true</property>
+        <property name="hibernate.show_sql">true</property>
+         
+        <!--Mepeando as classes de entidade-->
+        <!--<mapping class=""/>-->
+        <mapping class="br.edu.ifnmg.tcc.entidade.Usuario"/>
+        <mapping class="br.edu.ifnmg.tcc.entidade.ControleLeiteiro"/>
+        <mapping class="br.edu.ifnmg.tcc.entidade.ProducaoLeite"/>
+        <mapping class="br.edu.ifnmg.tcc.entidade.Veiculo"/>
+        <mapping class="br.edu.ifnmg.tcc.entidade.Animal"/>
+        <mapping class="br.edu.ifnmg.tcc.entidade.Raca"/>
+        <mapping class="br.edu.ifnmg.tcc.entidade.Pessoa"/>
+        <mapping class="br.edu.ifnmg.tcc.entidade.Alimento"/>
+        <mapping class="br.edu.ifnmg.tcc.entidade.Alimentacao"/>
+        <mapping class="br.edu.ifnmg.tcc.entidade.Especificacao"/>
+        <mapping class="br.edu.ifnmg.tcc.entidade.Configuracao"/>
+        <mapping class="br.edu.ifnmg.tcc.entidade.ControleAcesso"/>
+    
+    </session-factory>
+</hibernate-configuration>

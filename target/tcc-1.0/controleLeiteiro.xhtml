@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/templates/Layout.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:toollbar="http://xmlns.jcp.org/jsf/composite/toollbar">
+    <ui:define name="content">
+        <h:form>
+
+            <div id="cabecalho">
+                <h1>Controle de Entrega Leite </h1>
+            </div>    
+
+            <p:spacer></p:spacer>
+
+            <p:messages autoUpdate="true">
+                <p:effect event="load" type="bounce" speed="600"></p:effect>
+            </p:messages>
+
+            <toollbar:barraCrud managedBean="#{controleLeiteiroBean}"></toollbar:barraCrud>
+            <p:spacer></p:spacer>
+
+            <p:fieldset legend="Cadastro de Entrega de Leite" rendered="#{!controleLeiteiroBean.busca}">
+
+                <h:panelGrid columns="2">
+
+                    <h:outputLabel value="Nome do Fazendeiro"></h:outputLabel>
+                    <p:selectOneMenu value="#{controleLeiteiroBean.entidade.pessoa}" filter="true"  converter="#{controleLeiteiroBean.pessoaConverter}">
+                        <f:selectItem itemLabel="Selecione"></f:selectItem>
+                        <f:selectItems value="#{controleLeiteiroBean.listaPessoa}" var="bov" itemLabel="#{bov.nome}" itemValue="#{bov}"></f:selectItems>
+
+                    </p:selectOneMenu>
+
+
+                    <h:outputLabel value="Data"></h:outputLabel> 
+                    <p:calendar  value ="#{controleLeiteiroBean.entidade.dataEntrega}" pattern="dd/MM/yyyy HH:mm"></p:calendar>
+
+                    <h:outputLabel value="Quantidade De Leite Entregue"></h:outputLabel>
+                    <p:spinner prefix="Lt " stepFactor="0.25" min="0" value="#{controleLeiteiroBean.entidade.quantidade}"></p:spinner>
+
+
+                    <h:outputLabel value="Observação"></h:outputLabel>
+                    <p:inputTextarea placeholder="Escreva um Comentário"  rows="3" cols="26" autoResize="false" value="#{controleLeiteiroBean.entidade.observacao}"></p:inputTextarea>
+                </h:panelGrid>
+            </p:fieldset>
+
+            <p:panel rendered="#{controleLeiteiroBean.busca==true}" collapsed="true" header="Busca Personalizada" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="500" widgetVar="panel" style="margin-bottom:20px">                
+                <h:panelGrid columns="2" >
+                    <h:outputLabel value="Nome Fazendeiro"></h:outputLabel> 
+                    <p:inputText value="#{controleLeiteiroBean.nomeFazendeiro}">
+                        <p:ajax event="keyup" delay="800" global="false" listener="#{controleLeiteiroBean.buscar()}" update="dataTableLeite"></p:ajax>
+                    </p:inputText>
+                    <h:outputLabel value="Data da Entrega"></h:outputLabel> 
+                    <p:calendar pattern="dd/MM/yyyy" mask="true" value ="#{controleLeiteiroBean.dataEntrega}">
+                        <p:ajax event="dateSelect" global="false" listener="#{controleLeiteiroBean.buscar()}" update="dataTableLeite"></p:ajax>
+                        <p:ajax event="keyup" delay="1200" global="false" listener="#{controleLeiteiroBean.buscar()}" update="dataTableLeite"></p:ajax>
+                    </p:calendar>
+                </h:panelGrid>      
+            </p:panel>
+
+
+            <p:dataTable id="dataTableLeite" value="#{controleLeiteiroBean.entidades}" reflow="true" rowKey="#{f}" var="f" rendered="#{controleLeiteiroBean.busca==true}" emptyMessage="Clique no Botão Buscar. Para Listar Registros!" paginator="true" rows="10" rowsPerPageTemplate="5, 10, 20, 30">
+                <p:column headerText="Botões">
+                    <p:commandButton icon="ui-icon-pencil" action="#{controleLeiteiroBean.editar(f)}" update="@form"></p:commandButton>
+                    <p:commandButton icon="fa fa-trash-o" action="#{controleLeiteiroBean.deletar(f)}" update="@form">
+                        <p:confirm header="Confirmação" message="Deseja Realmente Excluir ?" icon="ui-icon-alert"></p:confirm>
+                    </p:commandButton>
+                </p:column>
+
+                <p:column headerText="Fazendeiro">
+                    <h:outputText value="#{f.pessoa.nome}"></h:outputText>
+                </p:column>
+                <p:column headerText="Data">
+                    <h:outputText value="#{f.dataEntrega}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Quantidade">
+                    <h:outputText value="#{f.quantidade}"></h:outputText>
+                </p:column>
+
+            </p:dataTable>    
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+

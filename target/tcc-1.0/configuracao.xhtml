@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/templates/Layout.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"            
+                xmlns:toollbar="http://xmlns.jcp.org/jsf/composite/toollbar">
+
+    <ui:define name="content">
+        <h:form>
+             #{loginBean.redirecionaSemPermissao('Admin')}
+            <div id="cabecalho">
+                <h1>Configurações</h1>
+            </div>            
+
+            <p:spacer></p:spacer>
+
+
+            <p:messages autoUpdate="true">
+                <p:effect event="load" type="bounce" speed="600"></p:effect>
+            </p:messages>
+            <p:fieldset legend="Cadastro Preço do Leite">
+                <p:commandButton value="Salvar" actionListener="#{configuracaoBean.salvar()}" update="@form"></p:commandButton>
+                <p:commandButton value="Buscar" actionListener="#{configuracaoBean.buscar()}" update="@form"></p:commandButton>
+
+                <h:panelGrid columns="2" >
+                    <p:outputLabel value="Preço do Leite"></p:outputLabel>
+                    <p:spinner min="0" prefix="R$ " stepFactor="0.1" value="#{configuracaoBean.preco.preco}"></p:spinner>
+                </h:panelGrid>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <h:head>
+        <h:outputStylesheet library="estilos" name="styles/style.css" />
+        <h:outputScript target="body" library="estilos" name="javascripts/index.js" />
+       
+        <style>
+            .ui-widget-overlay {
+                background: url(javax.faces.resources/sittef/imagens/sittef.png.jsf?);
+                opacity: .30;
+                z-index: -90;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <span href="#" class="button" id="toggle-login">Informe Seus Dados Para Login!</span>
+
+        <div id="login">
+            <div id="triangle"></div>
+            <h1> <center style="height: 50px; width: 100%; display: block">
+                    <h:graphicImage class="logo" library="sittef" name="imagens/sittef.png" height="50px" /> 
+                </center>
+            </h1>
+
+            <center>
+                <h:form>
+
+                    <p:messages showDetail="true"></p:messages>
+                    <h:panelGrid columns="1" style="width: 100%">
+                        <h:inputText pt:placeholder="Email" styleClass="inputLogin" value="#{loginBean.login}"></h:inputText>
+                        <h:inputSecret pt:placeholder="Senha" styleClass="inputLogin"   value="#{loginBean.senha}"></h:inputSecret>
+                    </h:panelGrid>
+                    <p:remoteCommand action="#{loginBean.redirecionarIndex()}" autoRun="true" delay="1000" rendered="#{loginBean.usuarioLogado != null}"></p:remoteCommand>
+                    <h:commandLink  styleClass="botaoLogar"  action="#{loginBean.logar()}">
+                        <div><i class="fa fa-key"></i>Acessar</div>
+                    </h:commandLink>
+                </h:form>
+            </center>
+        </div>
+
+        <div class="ui-widget-overlay">
+
+
+
+            <p:ajaxStatus onstart="PF('dialogAjax').show()" oncomplete="PF('dialogAjax').hide()"></p:ajaxStatus>
+            <p:dialog height="100px"   resizable="false" modal="true" widgetVar="dialogAjax" closable="false">
+                <h:graphicImage style="float: left; margin-right: 5px;" library="sittef" name="imagens/load.gif"></h:graphicImage>
+                <h2 style="float: left">Carregando...</h2>
+            </p:dialog>
+        </div>
+
+    </h:body>
+</html>
+

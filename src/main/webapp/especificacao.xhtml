@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/templates/Layout.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"            
+                xmlns:toollbar="http://xmlns.jcp.org/jsf/composite/toollbar">
+
+    <ui:define name="content">
+        <h:form>
+            #{loginBean.redirecionaSemPermissao('Admin')}
+            <div id="cabecalho">
+                <h1>Especificação do Animal </h1>
+            </div>            
+
+            <p:spacer></p:spacer>
+
+            <p:messages autoUpdate="true">
+                <p:effect event="load" type="bounce" speed="600"></p:effect>
+            </p:messages>
+
+            <toollbar:barraCrud managedBean="#{especificacaoBean}"><p:toolbarGroup align="right">
+                    <p:button  icon="fa fa-paw" value="Voltar" outcome="animal.jsf" ></p:button>
+                </p:toolbarGroup></toollbar:barraCrud>
+            <p:spacer></p:spacer>
+
+            <p:fieldset legend="Cadastro Especificação do Animal" rendered="#{!especificacaoBean.busca}">
+                <h:panelGrid columns="2"  >
+                    <h:outputLabel value="Especificação"></h:outputLabel> 
+                    <p:inputText value="#{especificacaoBean.entidade.especificacao}"></p:inputText>
+                </h:panelGrid>
+            </p:fieldset>
+
+            <p:tooltip for="@(.desabilitado)"></p:tooltip>
+            <p:dataTable value="#{especificacaoBean.entidades}" reflow="true" var="f" rowKey="#{f}" rendered="#{especificacaoBean.busca==true}" emptyMessage="Clique no Botão Buscar. Para Listar Registros!" paginator="true" rows="10" rowsPerPageTemplate="5, 10, 15">
+
+                <p:column headerText="Botões">
+                    <p:commandButton icon="ui-icon-pencil" action="#{especificacaoBean.editar(f)}" update="@form"></p:commandButton>
+                    <p:commandButton id="especificacao#{f.id}" icon="fa fa-trash-o" disabled="#{!f.podeDeletar()}" action="#{especificacaoBean.deletar(f)}" update="@form">
+                        <p:confirm header="Confirmação" message="Deseja Excluir ?" icon="ui-icon-alert"></p:confirm>                       
+                    </p:commandButton>
+                    <h:outputText rendered="#{!f.podeDeletar()}" title="Não pode deletar Especificação pois está associada a outros registro do sistema."  styleClass="fa fa-question desabilitado"></h:outputText>
+                </p:column>
+                <p:column headerText="Especificação">
+                    <h:outputText value="#{f.especificacao}"></h:outputText>
+                </p:column>
+            </p:dataTable>    
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+

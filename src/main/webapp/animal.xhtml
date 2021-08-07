@@ -1,0 +1,129 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/templates/Layout.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:toollbar="http://xmlns.jcp.org/jsf/composite/toollbar">
+
+    <ui:define name="content">
+        <h:form>
+            #{loginBean.redirecionaSemPermissao('Admin')}
+            <div id="cabecalho">
+                <h1>Animal</h1>
+            </div>   
+
+            <p:spacer></p:spacer>
+
+            <p:messages autoUpdate="true">
+                <p:effect event="load" type="bounce" speed="600"></p:effect>
+            </p:messages>
+
+            <toollbar:barraCrud managedBean="#{animalBean}"></toollbar:barraCrud>
+            <p:spacer></p:spacer>
+
+            <p:fieldset legend="Cadastro de Animais" rendered="#{!animalBean.busca}">
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="Nome"></h:outputLabel> 
+                    <p:inputText value="#{animalBean.entidade.animal}"></p:inputText>
+                </h:panelGrid>
+                <h:panelGrid columns="3">
+                    <h:outputLabel value="Especificação"></h:outputLabel>
+                    <p:selectOneMenu value="#{animalBean.entidade.especificacao}" filter="true" converter="#{animalBean.especificacaoConverter}">
+                        <f:selectItem itemLabel="Selecione"></f:selectItem>
+                        <f:selectItems value="#{animalBean.listaEspecificacao}" var="t" itemLabel="#{t.especificacao}" itemValue="#{t}"></f:selectItems>
+                    </p:selectOneMenu>
+                    <p:commandButton icon="fa fa-share" value=" Nova Especificação" process="@form" oncomplete="window.open('especificacao.jsf','_self')" ></p:commandButton>
+                </h:panelGrid>
+                <p:spacer></p:spacer>
+
+                <h:panelGrid columns="3">
+                    <h:outputLabel value="Raça"></h:outputLabel>
+                    <p:selectOneMenu value="#{animalBean.entidade.raca}" filter="true" converter="#{animalBean.racaConverter}">
+                        <f:selectItem itemLabel="Selecione"></f:selectItem>
+                        <f:selectItems value="#{animalBean.listaRaca}" var="t" itemLabel="#{t.raca}" itemValue="#{t}"></f:selectItems>
+                    </p:selectOneMenu>
+                     <p:commandButton icon="fa fa-share" value=" Nova Raça" process="@form" oncomplete="window.open('raca.jsf','_self')" ></p:commandButton>
+                </h:panelGrid>
+                <p:spacer></p:spacer>
+
+
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="Data de Nascimento"></h:outputLabel> 
+                    <p:calendar pattern="dd/MM/yyyy" navigator="true" mask="true"  value="#{animalBean.entidade.dataNascimento}"></p:calendar>
+
+                    <h:outputLabel value="Sexo"></h:outputLabel>
+                    <p:selectOneRadio value="#{animalBean.entidade.sexo}">
+                        <p:ajax event="change" update="vacaCio" global="false"></p:ajax>
+                        <f:selectItem itemLabel="Macho" itemValue="Macho" ></f:selectItem>
+                        <f:selectItem itemLabel="Fêmea" itemValue="Fêmea"></f:selectItem>
+                    </p:selectOneRadio>
+
+                    <h:outputLabel value="Cio da Vaca"></h:outputLabel>
+                    <p:calendar id="vacaCio" value="#{animalBean.entidade.dataCio}" disabled="#{animalBean.entidade.sexo=='Macho'}"></p:calendar>                           
+
+
+                    <h:outputLabel value="Mãe"></h:outputLabel>
+                    <p:selectOneMenu value="#{animalBean.entidade.listaAnimal}" filter="true" converter="#{animalBean.animalConverter}">
+                        <f:selectItem itemLabel="Selecione"></f:selectItem>
+                        <f:selectItems value="#{animalBean.listaAnimal}" var="c" itemLabel="#{c.animal}" itemValue="#{c}"></f:selectItems>
+                    </p:selectOneMenu>
+
+                    <h:outputLabel value="Observação"></h:outputLabel>
+                    <p:inputTextarea placeholder="Escreva um Comentário" rows="3" cols="26" autoResize="false" value="#{animalBean.entidade.observacao}"></p:inputTextarea>          
+                </h:panelGrid>
+            </p:fieldset>
+
+            <p:panel rendered="#{animalBean.busca==true}" collapsed="true" header="Busca Personalizada" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="500" widgetVar="panel" style="margin-bottom:20px">                
+                <h:panelGrid columns="2" >
+                    <h:outputLabel value="Nome Animal"></h:outputLabel> 
+                    <p:inputText value="#{animalBean.entidade.animal}">
+                        <p:ajax event="keyup" delay="800" global="false" listener="#{animalBean.buscar()}" update="dataTableAnimais"></p:ajax>
+                    </p:inputText>
+                    <h:outputLabel value="Data Nascimento"></h:outputLabel> 
+                    <p:calendar value ="#{animalBean.entidade.dataNascimento}">
+                        <p:ajax event="dateSelect" global="false" listener="#{animalBean.buscar()}" update="dataTableAnimais"></p:ajax>
+                        <p:ajax event="keyup" delay="1200" global="false" listener="#{animalBean.buscar()}" update="dataTableAnimais"></p:ajax>
+                    </p:calendar>
+                </h:panelGrid>      
+            </p:panel>
+
+            <p:tooltip for="@(.desabilitado)"></p:tooltip>
+            <p:dataTable value="#{animalBean.entidades}" id="dataTableAnimais" reflow="true" var="f" rowKey="#{f}" rendered="#{animalBean.busca==true}" emptyMessage="Clique no Botão Buscar. Para Listar Registros!" paginator="true" rows="10" rowsPerPageTemplate="5, 10, 20, 30">                    
+                <p:column headerText="Botões">
+                    <p:commandButton icon="ui-icon-pencil"  action="#{animalBean.editar(f)}" update="@form"></p:commandButton>
+                    <p:commandButton icon="fa fa-trash-o" id="animal#{f.id}"  disabled="#{!f.podeDeletar()}" action="#{animalBean.deletar(f)}" update="@form">
+                        <p:confirm header="Confirmação" message="Deseja Realmente Excluir ?" icon="ui-icon-alert"></p:confirm>
+                    </p:commandButton>
+                    <h:outputText rendered="#{!f.podeDeletar()}" title="Não pode deletar animal pois está associada a outros registro do sistema."  styleClass="fa fa-question desabilitado"></h:outputText>
+                </p:column>
+                <p:column headerText="Nome">
+                    <h:outputText value="#{f.animal}"></h:outputText>
+                </p:column>
+
+                <p:column headerText="Especificação">
+                    <h:outputText value="#{f.especificacao.especificacao}"></h:outputText>
+                </p:column>
+                <p:column headerText="Raça">
+                    <h:outputText value="#{f.raca.raca}"></h:outputText>
+                </p:column>
+
+                <p:column headerText="Data">
+                    <h:outputText value="#{f.dataNascimento}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Sexo">
+                    <h:outputText value="#{f.sexo}"></h:outputText>
+                </p:column>
+                <p:column headerText="Mãe">
+                    <h:outputText value="#{f.listaAnimal.animal}"></h:outputText>
+                </p:column>
+            </p:dataTable>    
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+

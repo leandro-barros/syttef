@@ -1,0 +1,97 @@
+/* TOPBAR */
+.aw-topbar  {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    min-height: 50px;
+    z-index: 2;
+    background: -webkit-linear-gradient(top,#f6f7f9 0,rgba(77, 175, 185, 0.4) 100%);
+
+}
+.logo {
+    height: 50px;
+}
+
+.bottom {
+    position: relative;
+    padding: 2px;
+    margin-top: 15px;
+    margin-left: 201px;
+    margin-right:  9px;
+}
+
+#cabecalho {
+    height: 37px;
+    position: relative;
+    background-color: #ffffff;
+    padding: 5px;
+    color: #000000;
+    border-bottom:  2px solid black ;
+    margin-top: 64px;
+}
+#topo h1{
+    text-align: left;
+    size: 20px;
+
+}
+
+/* SIDEBAR */
+.aw-sidebar {
+    position: fixed;
+    top: 54px;
+    bottom: 0;
+    left: 0;
+    width: 230px;
+    margin-left: -251px;
+    z-index: 9;
+    transition: margin-left 0.5s;
+    overflow-y: auto;
+    background-color: #f6f6f6;
+    border-right: 1px solid #eaeaea;
+}
+
+.aw-sidebar.is-toggled {
+    margin-left: 0px;
+}
+
+@media (min-width: 960px) {
+    .aw-sidebar {
+        margin-left: 0px;
+    }
+
+    .aw-sidebar.is-toggled {
+        margin-left: -211px;
+    }
+}
+
+/* CONTENT */
+.aw-content {
+    padding: 0 10px;
+    margin-top: 60px;
+    transition: margin-left 0.5s;
+}
+
+@media (min-width: 960px) {
+    .aw-content {
+        margin-left: 230px;//distancia do menu para a pagina.
+    }
+
+    .aw-content.is-toggled {
+        margin-left: 0;
+    }
+
+
+    .inicial{
+        height: 350px;
+        width: 550px;
+        margin: 30px;
+        margin-left: 250px
+    }
+
+    .size{
+        font-size: 20px;
+        color: black;
+    }
+
+}
